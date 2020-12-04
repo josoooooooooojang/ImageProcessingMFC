@@ -192,6 +192,7 @@
     <ClInclude Include="IppCreate.h" />
     <ClInclude Include="IppCreateDoc.h" />
     <ClInclude Include="IppCreateView.h" />
+    <ClInclude Include="IppDib.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="IppCreate.cpp" />
     <ClCompile Include="IppCreateDoc.cpp" />
     <ClCompile Include="IppCreateView.cpp" />
+    <ClCompile Include="IppDib.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
