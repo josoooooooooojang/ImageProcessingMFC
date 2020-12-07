@@ -1,5 +1,4 @@
 #pragma once
-
 #include <windows.h>
 
 class IppDib
@@ -31,18 +30,19 @@ public:
 	BOOL PasteFromClipboard();
 
 	// 대입 연산자 재정의와 비트맵 복사
-	IppDib& operator=(const IppDib& dib);
-	void Copy(IppDib* pImage);
+	//IppDib& operator=(const IppDib& dib);
+	//void Copy(IppDib* pImage);
 
 	// 비트맵 정보 반환 함수
-	LONG         GetHeight()         const { return m_nHeight; }
 	LONG         GetWidth()          const { return m_nWidth; }
+	LONG         GetHeight()         const { return m_nHeight; }
 	WORD         GetBitCount()       const { return m_nBitCount; }
 	DWORD        GetDibSize()        const { return m_nDibSize; }
 	LPBITMAPINFO GetBitmapInfoAddr() const { return (LPBITMAPINFO)m_pDib; }
+	BOOL         IsValid()           const { return (m_pDib != NULL); }
+	
 	BYTE*        GetDIBitsAddr() const;
 	int          GetPaletteNums() const;
-	BOOL         IsValid() const { return (m_pDib != NULL); }
 
 private:
 	// BMP 파일 입출력

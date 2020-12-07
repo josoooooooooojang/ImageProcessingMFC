@@ -289,3 +289,103 @@ void IppDib::Draw(HDC hdc, int dx, int dy, int dw, int dh,
 		DIB_RGB_COLORS,  // wUsage
 		SRCCOPY);        // dwROP
 }
+
+BOOL IppDib::CopyToClipboard()
+{
+	if (!::OpenClipboard(NULL))
+		return FALSE;
+
+	// DIB 전체를 전역 메모리 블럭에 복사
+	DWORD dwDibSize = GetDibSize();
+	HANDLE hDib = ::GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, dwDibSize);
+	if (hDib == NULL)
+	{
+		::CloseClipboard();
+		return FALSE;
+	}
+
+	LPVOID lpDib = ::GlobalLock((HGLOBAL)hDib);
+	memcpy(lpDib, GetBitmapInfoAddr(), dwDibSize);
+	::GlobalUnlock(hDib);
+
+	// 클립보드에 데이터 입력
+	::EmptyClipboard();
+	::SetClipboardData(CF_DIB, hDib);
+	::CloseClipboard();
+
+	return TRUE;
+}
+
+BOOL IppDib::PasteFromClipboard()
+{
+	// CF_DIB 타입이 아니면 종료한다.
+	if (!::IsClipboardFormatAvailable(CF_DIB))
+		return FALSE;
+
+	// 클립보드를 연다.
+	if (!::OpenClipboard(NULL))
+		return FALSE;
+
+	// 클립보드 내용을 받아 온다.
+	HANDLE hDib = ::GetClipboardData(CF_DIB);
+	if (hDib == NULL)
+	{
+		::CloseClipboard();
+		return FALSE;
+	}
+
+	// 메모리 블럭의 크기는 DIB 전체 크기와 동일
+	DWORD dwSize = (DWORD)::GlobalSize((HGLOBAL)hDib);
+	LPVOID lpDib = ::GlobalLock((HGLOBAL)hDib);
+
+	LPBITMAPINFOHEADER lpbi = (LPBITMAPINFOHEADER)lpDib;
+	m_nWidth = lpbi->biWidth;
+	m_nHeight = lpbi->biHeight;
+	m_nBitCount = lpbi->biBitCount;
+
+	DWORD dwWidthStep = (DWORD)((m_nWidth * m_nBitCount / 8 + 3) & ~3);
+	DWORD dwSizeImage = m_nHeight * dwWidthStep;
+
+	if (m_nBitCount == 24)
+		m_nDibSize = sizeof(BITMAPINFOHEADER) + dwSizeImage;
+	else
+		m_nDibSize = sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * (1 << m_nBitCount) + dwSizeImage;
+
+	// 현재 설정된 IppDib 객체가 있다면 삭제한다.
+	if (m_pDib)
+		Destroy();
+
+	m_pDib = new BYTE[m_nDibSize];
+	if (m_pDib == NULL)
+	{
+		::GlobalUnlock(hDib);
+		::CloseClipboard();
+		return FALSE;
+	}
+
+	memcpy(m_pDib, lpDib, m_nDibSize);
+	::GlobalUnlock(hDib);
+	::CloseClipboard();
+
+	return TRUE;
+}
+
+BYTE* IppDib::GetDIBitsAddr() const
+{
+	if (m_pDib == NULL)
+		return NULL;
+
+	LPBITMAPINFOHEADER lpbmi = (LPBITMAPINFOHEADER)m_pDib;
+	return ((BYTE*)m_pDib + lpbmi->biSize + (sizeof(RGBQUAD) * GetPaletteNums()));
+}
+
+int IppDib::GetPaletteNums() const
+{
+	switch (m_nBitCount)
+	{
+	case 1:  return 2;
+	case 4:  return 16;
+	case 8:  return 256;
+	default: return 0;
+	}
+}
