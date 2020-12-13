@@ -136,3 +136,18 @@ void CImageToolDoc::Dump(CDumpContext& dc) const
 
 
 // CImageToolDoc 명령
+
+
+BOOL CImageToolDoc::OnOpenDocument(LPCTSTR lpszPathName)
+{
+	if (!CDocument::OnOpenDocument(lpszPathName))
+		return FALSE;
+
+	return	m_Dib.Load(CT2A(lpszPathName));
+}
+
+
+BOOL CImageToolDoc::OnSaveDocument(LPCTSTR lpszPathName)
+{
+	return m_Dib.Save(CT2A(lpszPathName));
+}

@@ -4,7 +4,7 @@
 
 
 #pragma once
-
+#include ".\IppImage\IppDib.h"
 
 class CImageToolDoc : public CDocument
 {
@@ -45,4 +45,9 @@ protected:
 	// 검색 처리기에 대한 검색 콘텐츠를 설정하는 도우미 함수
 	void SetSearchContent(const CString& value);
 #endif // SHARED_HANDLERS
+public:
+	// member variable device independent bitmap
+	IppDib m_Dib;
+	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
+	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
 };

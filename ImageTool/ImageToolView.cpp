@@ -53,14 +53,15 @@ BOOL CImageToolView::PreCreateWindow(CREATESTRUCT& cs)
 
 // CImageToolView 그리기
 
-void CImageToolView::OnDraw(CDC* /*pDC*/)
+void CImageToolView::OnDraw(CDC* pDC)
 {
 	CImageToolDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
 
-	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
+	if (pDoc->m_Dib.IsValid()) 
+		pDoc->m_Dib.Draw(pDC->m_hDC);	
 }
 
 void CImageToolView::OnInitialUpdate()
