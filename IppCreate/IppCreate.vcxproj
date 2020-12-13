@@ -223,6 +223,7 @@
     <None Include="res\IppCreate.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Desktop\lenna.bmp" />
     <Image Include="res\IppCreate.ico" />
     <Image Include="res\IppCreateDoc.ico" />
     <Image Include="res\Toolbar.bmp" />
