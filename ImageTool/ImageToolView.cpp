@@ -66,12 +66,22 @@ void CImageToolView::OnDraw(CDC* pDC)
 
 void CImageToolView::OnInitialUpdate()
 {
-	CScrollView::OnInitialUpdate();
+	//CScrollView::OnInitialUpdate();
 
 	CSize sizeTotal;
-	// TODO: 이 뷰의 전체 크기를 계산합니다.
-	sizeTotal.cx = sizeTotal.cy = 100;
+	CImageToolDoc* pDoc = GetDocument();
+	if (pDoc->m_Dib.IsValid()) 
+	{
+		sizeTotal.cx = pDoc->m_Dib.GetWidth();
+		sizeTotal.cy = pDoc->m_Dib.GetHeight();
+	}
+	else 
+	{
+		sizeTotal.cx = sizeTotal.cy = 100;
+	}
+
 	SetScrollSizes(MM_TEXT, sizeTotal);
+	ResizeParentToFit(TRUE);
 }
 
 
