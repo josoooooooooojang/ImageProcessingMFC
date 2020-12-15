@@ -29,6 +29,7 @@ BEGIN_MESSAGE_MAP(CImageToolView, CScrollView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CImageToolView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 // CImageToolView 생성/소멸
@@ -147,3 +148,17 @@ CImageToolDoc* CImageToolView::GetDocument() const // 디버그되지 않은 버
 
 
 // CImageToolView 메시지 처리기
+
+
+BOOL CImageToolView::OnEraseBkgnd(CDC* pDC)
+{
+	CBrush br;
+	br.CreateHatchBrush(HS_DIAGCROSS,	RGB(123, 55, 11));
+	//br.CreateHatchBrush(HS_CROSS, RGB(123, 55, 11));
+	//br.CreateHatchBrush(HS_FDIAGONAL,	RGB(123, 55, 11));
+	//br.CreateHatchBrush(HS_HORIZONTAL,	RGB(123, 55, 11));
+	//br.CreateHatchBrush(HS_VERTICAL,	RGB(123, 55, 11));
+	FillOutsideRect(pDC, &br);
+
+	return TRUE;
+}
