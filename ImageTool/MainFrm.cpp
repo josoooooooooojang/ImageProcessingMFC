@@ -22,6 +22,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND(ID_VIEW_CUSTOMIZE, &CMainFrame::OnViewCustomize)
 	ON_REGISTERED_MESSAGE(AFX_WM_CREATETOOLBAR, &CMainFrame::OnToolbarCreateNew)
 	ON_WM_SETTINGCHANGE()
+	ON_COMMAND(ID_EDIT_PASTE_MAIN, &CMainFrame::OnEditPasteMain)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_PASTE_MAIN, &CMainFrame::OnUpdateEditPasteMain)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -225,4 +227,18 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 {
 	CMDIFrameWndEx::OnSettingChange(uFlags, lpszSection);
 	m_wndOutput.UpdateFonts();
+}
+
+
+void CMainFrame::OnEditPasteMain()
+{
+	IppDib dib;
+	if (dib.PasteFromClipboard())
+		AfxNewBitmap(dib);
+}
+
+
+void CMainFrame::OnUpdateEditPasteMain(CCmdUI *pCmdUI)
+{
+	pCmdUI->Enable(IsClipboardFormatAvailable(CF_DIB));
 }

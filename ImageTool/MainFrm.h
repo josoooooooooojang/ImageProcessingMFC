@@ -4,6 +4,7 @@
 
 #pragma once
 #include "OutputWnd.h"
+#include "IppImage/IppDib.h"
 
 class CMainFrame : public CMDIFrameWndEx
 {
@@ -47,6 +48,9 @@ protected:
 
 	BOOL CreateDockingWindows();
 	void SetDockingWindowIcons(BOOL bHiColorIcons);
+public:
+	afx_msg void OnEditPasteMain();
+	afx_msg void OnUpdateEditPasteMain(CCmdUI *pCmdUI);
 };
 
 

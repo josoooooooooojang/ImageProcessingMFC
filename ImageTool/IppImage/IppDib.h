@@ -30,8 +30,8 @@ public:
 	BOOL PasteFromClipboard();
 
 	// 대입 연산자 재정의와 비트맵 복사
-	//IppDib& operator=(const IppDib& dib);
-	//void Copy(IppDib* pImage);
+	IppDib& operator=(const IppDib& dib);
+	void Copy(IppDib* pImage);
 
 	// 비트맵 정보 반환 함수
 	LONG         GetWidth()          const { return m_nWidth; }

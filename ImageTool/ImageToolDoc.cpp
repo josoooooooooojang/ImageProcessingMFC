@@ -23,6 +23,8 @@
 IMPLEMENT_DYNCREATE(CImageToolDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CImageToolDoc, CDocument)
+	ON_COMMAND(ID_WINDOW_DUPLICATE, &CImageToolDoc::OnWindowDuplicate)
+	ON_COMMAND(ID_EDIT_COPY, &CImageToolDoc::OnEditCopy)
 END_MESSAGE_MAP()
 
 
@@ -44,16 +46,25 @@ BOOL CImageToolDoc::OnNewDocument()
 		return FALSE;
 
 	BOOL ret = TRUE;
-	CFileNewDlg dlg;
-	if (dlg.DoModal() == IDOK) {
-		if (dlg.m_nType == 0) 
-			ret = m_Dib.CreateGrayBitmap(dlg.m_nWidth, dlg.m_nHeight);
-		else 
-			ret = m_Dib.CreateRgbBitmap(dlg.m_nWidth, dlg.m_nHeight);
-	}
-	else
+
+	if (theApp.m_pNewDib == NULL) 
 	{
-		ret = FALSE;
+		CFileNewDlg dlg;
+		if (dlg.DoModal() == IDOK) {
+			if (dlg.m_nType == 0) 
+				ret = m_Dib.CreateGrayBitmap(dlg.m_nWidth, dlg.m_nHeight);
+			else 
+				ret = m_Dib.CreateRgbBitmap(dlg.m_nWidth, dlg.m_nHeight);
+		}
+		else
+		{
+			ret = FALSE;
+		}
+	}
+	else 
+	{
+		m_Dib = *(theApp.m_pNewDib);
+		theApp.m_pNewDib = NULL;
 	}
 
 	return ret;
@@ -160,4 +171,17 @@ BOOL CImageToolDoc::OnOpenDocument(LPCTSTR lpszPathName)
 BOOL CImageToolDoc::OnSaveDocument(LPCTSTR lpszPathName)
 {
 	return m_Dib.Save(CT2A(lpszPathName));
+}
+
+
+void CImageToolDoc::OnWindowDuplicate()
+{
+	AfxNewBitmap(m_Dib);
+}
+
+
+void CImageToolDoc::OnEditCopy()
+{
+	if (m_Dib.IsValid())
+		m_Dib.CopyToClipboard();
 }

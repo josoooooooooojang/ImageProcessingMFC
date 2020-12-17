@@ -27,12 +27,15 @@ BEGIN_MESSAGE_MAP(CImageToolApp, CWinAppEx)
 	ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)
 	// 표준 인쇄 설정 명령입니다.
 	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinAppEx::OnFilePrintSetup)
+	ON_COMMAND(ID_EDIT_PASTE, &CImageToolApp::OnEditPaste)
+	ON_UPDATE_COMMAND_UI(ID_EDIT_PASTE, &CImageToolApp::OnUpdateEditPaste)
 END_MESSAGE_MAP()
 
 
 // CImageToolApp 생성
 
 CImageToolApp::CImageToolApp() noexcept
+	:m_pNewDib(NULL)
 {
 	m_bHiColorIcons = TRUE;
 
@@ -230,5 +233,22 @@ void CImageToolApp::SaveCustomState()
 
 // CImageToolApp 메시지 처리기
 
+// 영상 새 창에 띄우기 전역 함수 정의
+void AfxNewBitmap(IppDib& dib) {
+	theApp.m_pNewDib = &dib;
+	AfxGetMainWnd()->SendMessage(WM_COMMAND, ID_FILE_NEW);
+}
 
 
+void CImageToolApp::OnEditPaste()
+{
+	IppDib dib;
+	if (dib.PasteFromClipboard())
+		AfxNewBitmap(dib);
+}
+
+
+void CImageToolApp::OnUpdateEditPaste(CCmdUI *pCmdUI)
+{
+	pCmdUI->Enable(IsClipboardFormatAvailable(CF_DIB));
+}

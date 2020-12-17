@@ -370,6 +370,29 @@ BOOL IppDib::PasteFromClipboard()
 	return TRUE;
 }
 
+IppDib& IppDib::operator=(const IppDib& dib)
+{
+	if (this == &dib) // Àç±Í °Ë»ç
+		return *this;
+
+	if (m_pDib)
+		delete[] m_pDib;
+
+	m_nWidth = dib.m_nWidth;
+	m_nHeight = dib.m_nHeight;
+	m_nBitCount = dib.m_nBitCount;
+	m_nDibSize = dib.m_nDibSize;
+	m_pDib = NULL;
+
+	if (dib.m_pDib != NULL)
+	{
+		m_pDib = new BYTE[m_nDibSize];
+		memcpy(m_pDib, dib.m_pDib, m_nDibSize);
+	}
+
+	return *this;
+}
+
 BYTE* IppDib::GetDIBitsAddr() const
 {
 	if (m_pDib == NULL)
