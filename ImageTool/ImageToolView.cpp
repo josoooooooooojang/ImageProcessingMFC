@@ -32,18 +32,24 @@ BEGIN_MESSAGE_MAP(CImageToolView, CScrollView)
 	ON_WM_ERASEBKGND()
 	ON_COMMAND(ID_VIEW_ZOOM1, &CImageToolView::OnViewZoom1)
 	ON_COMMAND(ID_VIEW_ZOOM2, &CImageToolView::OnViewZoom2)
+	ON_COMMAND(ID_VIEW_ZOOM3, &CImageToolView::OnViewZoom3)
+	ON_COMMAND(ID_VIEW_ZOOM4, &CImageToolView::OnViewZoom4)
+	ON_COMMAND(ID_VIEW_ZOOM5, &CImageToolView::OnViewZoom5)
+	ON_COMMAND(ID_VIEW_ZOOM6, &CImageToolView::OnViewZoom6)
+	ON_COMMAND(ID_VIEW_ZOOM7, &CImageToolView::OnViewZoom7)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ZOOM1, &CImageToolView::OnUpdateViewZoom1)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ZOOM2, &CImageToolView::OnUpdateViewZoom2)
-	ON_COMMAND(ID_VIEW_ZOOM3, &CImageToolView::OnViewZoom3)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ZOOM3, &CImageToolView::OnUpdateViewZoom3)
-	ON_COMMAND(ID_VIEW_ZOOM4, &CImageToolView::OnViewZoom4)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ZOOM4, &CImageToolView::OnUpdateViewZoom4)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_ZOOM5, &CImageToolView::OnUpdateViewZoom5)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_ZOOM6, &CImageToolView::OnUpdateViewZoom6)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_ZOOM7, &CImageToolView::OnUpdateViewZoom7)
 END_MESSAGE_MAP()
 
 // CImageToolView 생성/소멸
 
 CImageToolView::CImageToolView() noexcept
-	:m_nZoom(1)
+	:m_nZoom(1.0)
 {
 	// TODO: 여기에 생성 코드를 추가합니다.
 
@@ -74,7 +80,7 @@ void CImageToolView::OnDraw(CDC* pDC)
 	{
 		int w = pDoc->m_Dib.GetWidth();
 		int h = pDoc->m_Dib.GetHeight();
-		pDoc->m_Dib.Draw(pDC->m_hDC, 0, 0, w * m_nZoom, h * m_nZoom);
+		pDoc->m_Dib.Draw(pDC->m_hDC, 0, 0, (int)(w * m_nZoom), (int)(h * m_nZoom));
 	}
 }
 
@@ -94,8 +100,8 @@ void CImageToolView::SetScrollSizeToFit()
 		int w = pDoc->m_Dib.GetWidth();
 		int h = pDoc->m_Dib.GetHeight();
 
-		sizeTotal.cx = w * m_nZoom;
-		sizeTotal.cy = h * m_nZoom;
+		sizeTotal.cx = (int)(w * m_nZoom);
+		sizeTotal.cy = (int)(h * m_nZoom);
 	}
 	else
 	{
@@ -192,48 +198,84 @@ BOOL CImageToolView::OnEraseBkgnd(CDC* pDC)
 
 void CImageToolView::OnViewZoom1()
 {
-	m_nZoom = 1;
+	m_nZoom = 1.0;
 	SetScrollSizeToFit();
 	Invalidate(TRUE);
 }
 
 void CImageToolView::OnViewZoom2()
 {
-	m_nZoom = 2;
+	m_nZoom = 2.0;
 	SetScrollSizeToFit();
 	Invalidate(TRUE);
 }
 
 void CImageToolView::OnViewZoom3()
 {
-	m_nZoom = 3;
+	m_nZoom = 3.0;
 	SetScrollSizeToFit();
 	Invalidate(TRUE);
 }
 
 void CImageToolView::OnViewZoom4()
 {
-	m_nZoom = 4;
+	m_nZoom = 4.0;
+	SetScrollSizeToFit();
+	Invalidate(TRUE);
+}
+
+void CImageToolView::OnViewZoom5()
+{
+	m_nZoom = 0.5;
+	SetScrollSizeToFit();
+	Invalidate(TRUE);
+}
+
+void CImageToolView::OnViewZoom6()
+{
+	m_nZoom = 0.33;
+	SetScrollSizeToFit();
+	Invalidate(TRUE);
+}
+
+void CImageToolView::OnViewZoom7()
+{
+	m_nZoom = 0.25;
 	SetScrollSizeToFit();
 	Invalidate(TRUE);
 }
 
 void CImageToolView::OnUpdateViewZoom1(CCmdUI *pCmdUI)
 {
-	pCmdUI->SetCheck(m_nZoom == 1);
+	pCmdUI->SetCheck(m_nZoom == 1.0);
 }
 
 void CImageToolView::OnUpdateViewZoom2(CCmdUI *pCmdUI)
 {
-	pCmdUI->SetCheck(m_nZoom == 2);
+	pCmdUI->SetCheck(m_nZoom == 2.0);
 }
 
 void CImageToolView::OnUpdateViewZoom3(CCmdUI *pCmdUI)
 {
-	pCmdUI->SetCheck(m_nZoom == 3);
+	pCmdUI->SetCheck(m_nZoom == 3.0);
 }
 
 void CImageToolView::OnUpdateViewZoom4(CCmdUI *pCmdUI)
 {
-	pCmdUI->SetCheck(m_nZoom == 4);
+	pCmdUI->SetCheck(m_nZoom == 4.0);
+}
+
+void CImageToolView::OnUpdateViewZoom5(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(m_nZoom == 0.5);
+}
+
+void CImageToolView::OnUpdateViewZoom6(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck((int)(m_nZoom * 10) == 3);
+}
+
+void CImageToolView::OnUpdateViewZoom7(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(m_nZoom == 0.25);
 }

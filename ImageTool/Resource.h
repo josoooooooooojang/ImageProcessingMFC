@@ -41,13 +41,19 @@
 #define ID_VIEW_ZOOM2                   32780
 #define ID_VIEW_ZOOM3                   32781
 #define ID_VIEW_ZOOM4                   32782
+#define ID_32787                        32787
+#define ID_32788                        32788
+#define ID_32789                        32789
+#define ID_VIEW_ZOOM5                   32790
+#define ID_VIEW_ZOOM6                   32791
+#define ID_VIEW_ZOOM7                   32792
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        313
-#define _APS_NEXT_COMMAND_VALUE         32787
+#define _APS_NEXT_COMMAND_VALUE         32797
 #define _APS_NEXT_CONTROL_VALUE         1006
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
