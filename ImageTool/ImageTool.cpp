@@ -239,6 +239,23 @@ void AfxNewBitmap(IppDib& dib) {
 	AfxGetMainWnd()->SendMessage(WM_COMMAND, ID_FILE_NEW);
 }
 
+void AfxPrintInfo(CString message)
+{
+	CMainFrame *pFrame = (CMainFrame*)AfxGetMainWnd();
+	pFrame->m_wndOutput.AddString(message);
+}
+
+void AfxPrintInfo(LPCTSTR lpszFormat, ...)
+{
+	CString message;
+
+	va_list argList;
+	va_start(argList, lpszFormat);
+	message.FormatV(lpszFormat, argList);
+	va_end(argList);
+
+	AfxPrintInfo(message);
+}
 
 void CImageToolApp::OnEditPaste()
 {

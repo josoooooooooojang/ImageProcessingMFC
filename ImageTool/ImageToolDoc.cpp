@@ -164,7 +164,11 @@ BOOL CImageToolDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	if (!CDocument::OnOpenDocument(lpszPathName))
 		return FALSE;
 
-	return	m_Dib.Load(CT2A(lpszPathName));
+	BOOL res = m_Dib.Load(CT2A(lpszPathName));
+	if (res)
+		AfxPrintInfo(_T("[파일 열기] 파일 경로 : %s, 가로 크기 : %d픽셀, 세로 크기 : %d픽셀, 색상 수 : %d"), lpszPathName, m_Dib.GetWidth(), m_Dib.GetHeight(), 0x01 << m_Dib.GetBitCount());
+
+	return	res;
 }
 
 

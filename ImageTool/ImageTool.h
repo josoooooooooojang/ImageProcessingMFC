@@ -42,3 +42,5 @@ public:
 extern CImageToolApp theApp;
 
 void AfxNewBitmap(IppDib& dib);
+void AfxPrintInfo(CString message);
+void AfxPrintInfo(LPCTSTR lpszFormat, ...);

@@ -48,6 +48,8 @@ public:
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	float m_nZoom;
 	void SetScrollSizeToFit();
+	void ShowImageInfo(CPoint point);
+
 	afx_msg void OnViewZoom1();
 	afx_msg void OnViewZoom2();
 	afx_msg void OnViewZoom3(); 
@@ -62,6 +64,7 @@ public:
 	afx_msg void OnUpdateViewZoom5(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateViewZoom6(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateViewZoom7(CCmdUI *pCmdUI);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // ImageToolView.cpp의 디버그 버전

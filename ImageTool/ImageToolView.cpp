@@ -12,7 +12,7 @@
 
 #include "ImageToolDoc.h"
 #include "ImageToolView.h"
-
+#include "MainFrm.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -44,6 +44,7 @@ BEGIN_MESSAGE_MAP(CImageToolView, CScrollView)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ZOOM5, &CImageToolView::OnUpdateViewZoom5)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ZOOM6, &CImageToolView::OnUpdateViewZoom6)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_ZOOM7, &CImageToolView::OnUpdateViewZoom7)
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 // CImageToolView 생성/소멸
@@ -113,6 +114,30 @@ void CImageToolView::SetScrollSizeToFit()
 	ResizeParentToFit(TRUE);
 }
 
+void CImageToolView::ShowImageInfo(CPoint point)
+{
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	CImageToolDoc* pDoc = GetDocument();
+
+	int w = pDoc->m_Dib.GetWidth();
+	int h = pDoc->m_Dib.GetHeight();
+	int c = pDoc->m_Dib.GetPaletteNums();
+
+	CString strText;
+
+	if (point.x >= 0 && point.y >= 0 && point.x < w && point.y < h)
+	{
+		strText.Format(_T("(%d, %d)"), point.x, point.y);
+		pFrame->m_wndStatusBar.SetPaneText(0, strText);
+	}
+
+	if (c == 0)
+		strText.Format(_T("w:%d h:%d c:16M"), w, h);
+	else
+		strText.Format(_T("w:%d h:%d c:%d"), w, h, c);
+
+	pFrame->m_wndStatusBar.SetPaneText(1, strText);
+}
 
 
 
@@ -195,49 +220,42 @@ BOOL CImageToolView::OnEraseBkgnd(CDC* pDC)
 	return TRUE;
 }
 
-
 void CImageToolView::OnViewZoom1()
 {
 	m_nZoom = 1.0;
 	SetScrollSizeToFit();
 	Invalidate(TRUE);
 }
-
 void CImageToolView::OnViewZoom2()
 {
 	m_nZoom = 2.0;
 	SetScrollSizeToFit();
 	Invalidate(TRUE);
 }
-
 void CImageToolView::OnViewZoom3()
 {
 	m_nZoom = 3.0;
 	SetScrollSizeToFit();
 	Invalidate(TRUE);
 }
-
 void CImageToolView::OnViewZoom4()
 {
 	m_nZoom = 4.0;
 	SetScrollSizeToFit();
 	Invalidate(TRUE);
 }
-
 void CImageToolView::OnViewZoom5()
 {
 	m_nZoom = 0.5;
 	SetScrollSizeToFit();
 	Invalidate(TRUE);
 }
-
 void CImageToolView::OnViewZoom6()
 {
 	m_nZoom = 0.33;
 	SetScrollSizeToFit();
 	Invalidate(TRUE);
 }
-
 void CImageToolView::OnViewZoom7()
 {
 	m_nZoom = 0.25;
@@ -249,33 +267,37 @@ void CImageToolView::OnUpdateViewZoom1(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(m_nZoom == 1.0);
 }
-
 void CImageToolView::OnUpdateViewZoom2(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(m_nZoom == 2.0);
 }
-
 void CImageToolView::OnUpdateViewZoom3(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(m_nZoom == 3.0);
 }
-
 void CImageToolView::OnUpdateViewZoom4(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(m_nZoom == 4.0);
 }
-
 void CImageToolView::OnUpdateViewZoom5(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(m_nZoom == 0.5);
 }
-
 void CImageToolView::OnUpdateViewZoom6(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck((int)(m_nZoom * 10) == 3);
 }
-
 void CImageToolView::OnUpdateViewZoom7(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(m_nZoom == 0.25);
+}
+
+void CImageToolView::OnMouseMove(UINT nFlags, CPoint point)
+{
+	CPoint pt = point + GetScrollPosition();
+	pt.x /= m_nZoom;
+	pt.y /= m_nZoom;
+	ShowImageInfo(pt);
+
+	CScrollView::OnMouseMove(nFlags, point);
 }
