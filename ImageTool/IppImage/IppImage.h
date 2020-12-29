@@ -1,5 +1,6 @@
 #pragma once
 #include <memory.h>
+#include "RGBBYTE.h"
 
 template<typename T>
 class IppImage

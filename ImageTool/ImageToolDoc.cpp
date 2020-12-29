@@ -13,10 +13,20 @@
 #include "ImageToolDoc.h"
 #include "CFileNewDlg.h"
 #include <propkey.h>
+#include "BrightnessContrastDlg.h"
+#include "GammaCorrectionDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+#define CONVERT_DIB_TO_BYTEIMAGE(m_Dib, img) \
+	IppByteImage img;	\
+	IppDibToImage(m_Dib, img);
+
+#define CONVERT_IMAGE_TO_DIB(img, dib)	\
+	IppDib dib;	\
+	IppImageToDib(img, dib);	
 
 // CImageToolDoc
 
@@ -25,6 +35,10 @@ IMPLEMENT_DYNCREATE(CImageToolDoc, CDocument)
 BEGIN_MESSAGE_MAP(CImageToolDoc, CDocument)
 	ON_COMMAND(ID_WINDOW_DUPLICATE, &CImageToolDoc::OnWindowDuplicate)
 	ON_COMMAND(ID_EDIT_COPY, &CImageToolDoc::OnEditCopy)
+	ON_COMMAND(ID_IMAGE_INVERSE, &CImageToolDoc::OnImageInverse)
+	ON_UPDATE_COMMAND_UI(ID_IMAGE_INVERSE, &CImageToolDoc::OnUpdateImageInverse)
+	ON_COMMAND(IDD_BRIGHTNESS_CONTRAST, &CImageToolDoc::OnBrightnessContrast)
+	ON_COMMAND(IDC_GAMMA_CORRECTION, &CImageToolDoc::OnGammaCorrection)
 END_MESSAGE_MAP()
 
 
@@ -69,9 +83,6 @@ BOOL CImageToolDoc::OnNewDocument()
 
 	return ret;
 }
-
-
-
 
 // CImageToolDoc serialization
 
@@ -188,4 +199,53 @@ void CImageToolDoc::OnEditCopy()
 {
 	if (m_Dib.IsValid())
 		m_Dib.CopyToClipboard();
+}
+
+void CImageToolDoc::OnImageInverse()
+{
+	CONVERT_DIB_TO_BYTEIMAGE(m_Dib, img);
+	IppInverse(img);
+	CONVERT_IMAGE_TO_DIB(img, dib);
+	//IppImageToDib(img, m_Dib);
+
+
+	AfxPrintInfo(_T("[반전] 입력 영상: %s"), GetTitle());
+	AfxNewBitmap(dib);
+	//UpdateAllViews(NULL);
+}
+
+void CImageToolDoc::OnUpdateImageInverse(CCmdUI *pCmdUI)
+{
+	pCmdUI->Enable(m_Dib.GetBitCount() == 8);
+}
+	
+void CImageToolDoc::OnBrightnessContrast()
+{
+	CBrightnessContrastDlg dlg;
+	if (dlg.DoModal() == IDOK)
+	{
+		CONVERT_DIB_TO_BYTEIMAGE(m_Dib, img)
+		IppBrightness(img, dlg.m_nBrightness);
+		IppContrast(img, dlg.m_nContrast);
+		CONVERT_IMAGE_TO_DIB(img, dib)
+
+		AfxPrintInfo(_T("[밝기/명암비 조절] 입력 영상: %s, 밝기: %d, 명암비: %d%%"),
+		GetTitle(), dlg.m_nBrightness, dlg.m_nContrast);
+		AfxNewBitmap(dib);
+	}
+}
+
+
+void CImageToolDoc::OnGammaCorrection()
+{
+	CGammaCorrectionDlg dlg;
+	if (dlg.DoModal() == IDOK)
+	{
+		CONVERT_DIB_TO_BYTEIMAGE(m_Dib, img);
+		IppGammaCorrection(img, dlg.m_fGamma);
+		CONVERT_IMAGE_TO_DIB(img, dib);
+
+		AfxPrintInfo(_T("[감마 보정] 입력 영상: %s, 감마: %4.2f"), GetTitle(), dlg.m_fGamma);
+		AfxNewBitmap(dib);
+	}
 }

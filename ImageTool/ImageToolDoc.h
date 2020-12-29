@@ -5,6 +5,9 @@
 
 #pragma once
 #include ".\IppImage\IppDib.h"
+#include ".\IppImage\IppImage.h"
+#include ".\IppImage\IppConvert.h"
+#include ".\IppImage\IppEnhance.h"
 
 class CImageToolDoc : public CDocument
 {
@@ -52,4 +55,8 @@ public:
 	virtual BOOL OnSaveDocument(LPCTSTR lpszPathName);
 	afx_msg void OnWindowDuplicate();
 	afx_msg void OnEditCopy();
+	afx_msg void OnImageInverse();
+	afx_msg void OnUpdateImageInverse(CCmdUI *pCmdUI);
+	afx_msg void OnBrightnessContrast();
+	afx_msg void OnGammaCorrection();
 };
