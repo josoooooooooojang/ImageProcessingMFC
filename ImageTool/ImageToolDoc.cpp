@@ -15,6 +15,7 @@
 #include <propkey.h>
 #include "BrightnessContrastDlg.h"
 #include "GammaCorrectionDlg.h"
+#include "HistogramDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -39,6 +40,7 @@ BEGIN_MESSAGE_MAP(CImageToolDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_IMAGE_INVERSE, &CImageToolDoc::OnUpdateImageInverse)
 	ON_COMMAND(IDD_BRIGHTNESS_CONTRAST, &CImageToolDoc::OnBrightnessContrast)
 	ON_COMMAND(IDC_GAMMA_CORRECTION, &CImageToolDoc::OnGammaCorrection)
+	ON_COMMAND(ID_VIEW_HISTOGRAM, &CImageToolDoc::OnViewHistogram)
 END_MESSAGE_MAP()
 
 
@@ -248,4 +250,12 @@ void CImageToolDoc::OnGammaCorrection()
 		AfxPrintInfo(_T("[감마 보정] 입력 영상: %s, 감마: %4.2f"), GetTitle(), dlg.m_fGamma);
 		AfxNewBitmap(dib);
 	}
+}
+
+
+void CImageToolDoc::OnViewHistogram()
+{
+	CHistogramDlg dlg;
+	dlg.SetImage(&m_Dib);
+	dlg.DoModal();
 }

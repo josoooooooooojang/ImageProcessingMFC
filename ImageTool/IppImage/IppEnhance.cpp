@@ -45,3 +45,17 @@ void IppGammaCorrection(IppByteImage& img, float gamma)
 		p[i] = static_cast<BYTE>(limit(gamma_table[p[i]] * 255 + 0.5f));
 	}
 }
+
+void IppHistogram(IppByteImage& img, float histo[256])
+{
+	int size = img.GetSize();
+	BYTE* p = img.GetPixels();
+
+	int cnt[256];
+	memset(cnt, 0, sizeof(int) * 256);
+	for (int i = 0; i < size; i++)
+		cnt[p[i]]++;
+
+	for (int i = 0; i < 256; i++)
+		histo[i] = static_cast<float>(cnt[i]) / size;
+}

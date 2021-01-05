@@ -28,6 +28,7 @@
 #define IDD_FILE_NEW                    310
 #define IDD_BRIGHTNESS_CONTRAST         313
 #define IDD_GAMMA_CORRECTION            315
+#define IDD_HISTOGRAM                   317
 #define IDC_WIDTH                       1000
 #define IDC_HEIGHT                      1001
 #define IDC_IMAGE_TYPE                  1004
@@ -60,13 +61,16 @@
 #define ID_32799                        32799
 #define ID_32800                        32800
 #define IDC_GAMMA_CORRECTION            32801
+#define ID_32802                        32802
+#define IDD_VIEW_HISTOGRAM              32803
+#define ID_VIEW_HISTOGRAM               32804
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        317
-#define _APS_NEXT_COMMAND_VALUE         32802
+#define _APS_NEXT_RESOURCE_VALUE        319
+#define _APS_NEXT_COMMAND_VALUE         32805
 #define _APS_NEXT_CONTROL_VALUE         1012
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
